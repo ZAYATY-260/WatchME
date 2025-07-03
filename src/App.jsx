@@ -150,7 +150,7 @@ function MovieSection({ title, movies, navigate }) {
           <div
             key={movie.id}
             onClick={() => navigate(`/movie/${movie.id}`)}
-            className="snap-start flex-shrink-0 w-[140px] sm:w-[180px] md:w-[220px] rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition duration-100 hover:scale-95 hover:shadow-2xl hover:-translate-y-1 bg-gradient-to-tr from-gray-900/80 to-gray-800/70"
+            className="snap-start flex-shrink-0 w-[140px] sm:w-[180px] md:w-[220px] rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition duration-100 hover:scale-105 hover:shadow-2xl hover:-translate-y-1 bg-gradient-to-tr from-gray-900/80 to-gray-800/70"
           >
             <div className="relative overflow-hidden rounded-t-xl h-[200px] sm:h-[260px] md:h-[320px]">
               <img
