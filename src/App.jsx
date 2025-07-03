@@ -7,9 +7,11 @@ import {
 } from "./api/TMDB";
 import Topbar from "./components/Topbar"; 
 import Footer  from "./components/Footer";
+
 import { ChevronLeft, ChevronRight, Play, Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
+import GeminiChat from "./components/GeminiChat";
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -39,7 +41,7 @@ function App() {
   return (
     <div className="bg-black min-h-screen text-white">
       <Topbar />
-
+   
       {/* Hero Banner */}
       {heroMovie && (
         <section
@@ -103,7 +105,9 @@ function App() {
       <MovieSection title="Upcoming Movies" movies={upcomingMovies} navigate={navigate} />
       <MovieSection title="Popular On TV" movies={popularMovies} navigate={navigate} />
       <MovieSection title="Top Rated Movies" movies={topRatedMovies} navigate={navigate} />
-
+   
+   
+      <GeminiChat/> 
       <Footer/>
       
     </div>
