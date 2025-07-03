@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-100 dark:bg-[#212121] text-gray-900 dark:text-white;
+}
+/* index.css */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+/* If you don’t have Tailwind aspect-ratio plugin */
+.aspect-w-16 {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+}
+.aspect-h-9 > iframe {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+}
