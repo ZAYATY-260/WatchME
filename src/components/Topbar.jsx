@@ -30,7 +30,7 @@ const Topbar = () => {
           <Link to="/" className="hover:text-gray-300 transition">Home</Link>
           <Link to="/movies" className="hover:text-gray-300 transition">Movies</Link>
           <Link to="/tv-shows" className="hover:text-gray-300 transition">TV Shows</Link>
-          <Link to="/my-list" className="hover:text-gray-300 transition">My List</Link>
+          <Link to="/mylist" className="hover:text-gray-300 transition">My List</Link>
         </nav>
       </div>
 
@@ -58,7 +58,7 @@ const Topbar = () => {
           <Link to="/" className="hover:text-gray-300 transition" onClick={() => setMobileMenuOpen(false)}>Home</Link>
           <Link to="/movies" className="hover:text-gray-300 transition" onClick={() => setMobileMenuOpen(false)}>Movies</Link>
           <Link to="/tv-shows" className="hover:text-gray-300 transition" onClick={() => setMobileMenuOpen(false)}>TV Shows</Link>
-          <Link to="/my-list" className="hover:text-gray-300 transition" onClick={() => setMobileMenuOpen(false)}>My List</Link>
+          <Link to="/mylist" className="hover:text-gray-300 transition" onClick={() => setMobileMenuOpen(false)}>My List</Link>
         </nav>
       )}
     </header>
