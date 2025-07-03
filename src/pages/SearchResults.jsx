@@ -24,7 +24,7 @@ export default function SearchResults() {
       setError(null);
       try {
         const res = await axios.get(`${BASE_URL}/search/movie`, {
-          params: { api_key: apiKey, query, language: "en-US", include_adult: false },
+          params: { api_key: apiKey, query, language: "en-US" },
         });
         setResults(res.data.results || []);
       } catch (err) {

@@ -123,9 +123,10 @@ export default function MovieDetail() {
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-8 flex flex-col min-h-screen">
 
         {/* Top bar: X button */}
-        <div className="flex justify-end mb-6">
+
+        <div className="flex justify-end mb-6 items-center">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/')}
             aria-label="Close"
             className="text-white text-3xl font-bold hover:text-red-600 transition"
           >
@@ -181,44 +182,43 @@ export default function MovieDetail() {
             <p className="text-gray-400 text-center">Trailer not available.</p>
           )}
         </div>
-{/* Watch Movie Section */}
-{/* Watch Movie Section */}
-<section className="mt-10 mb-10 px-4">
-  <h2 className="text-2xl font-semibold mb-4 max-w-screen-xl mx-auto">Watch Movie</h2>
+        {/* Watch Movie Section */}
+        {/* Watch Movie Section */}
+        <section className="mt-10 mb-10 px-4">
+          <h2 className="text-2xl font-semibold mb-4 max-w-screen-xl mx-auto">Watch Movie</h2>
 
-  {/* Server Selection Buttons */}
-  <div className="flex space-x-4 mb-4 max-w-screen-xl mx-auto px-4">
-    {availableServers.map((server) => (
-      <button
-        key={server.key}
-        onClick={() => setSelectedServer(server.key)}
-        className={`px-4 py-2 rounded font-semibold border transition ${
-          selectedServer === server.key
-            ? "bg-red-600 text-white border-red-600"
-            : "bg-black text-gray-300 border-gray-700 hover:border-gray-500"
-        }`}
-      >
-        {server.name}
-      </button>
-    ))}
-  </div>
+          {/* Server Selection Buttons */}
+          <div className="flex space-x-4 mb-4 max-w-screen-xl mx-auto px-4">
+            {availableServers.map((server) => (
+              <button
+                key={server.key}
+                onClick={() => setSelectedServer(server.key)}
+                className={`px-4 py-2 rounded font-semibold border transition ${selectedServer === server.key
+                    ? "bg-red-600 text-white border-red-600"
+                    : "bg-black text-gray-300 border-gray-700 hover:border-gray-500"
+                  }`}
+              >
+                {server.name}
+              </button>
+            ))}
+          </div>
 
-  {/* Video iframe with 16:9 aspect ratio, wider max width */}
-  <div className="aspect-w-16 aspect-h-9 rounded overflow-hidden shadow-lg max-w-screen-xl mx-auto">
-    <iframe
-      key={selectedServer} // reload iframe on server change
-      src={
-        selectedServer === "godrive"
-          ? servers.find((s) => s.key === selectedServer).getUrl(imdbId)
-          : servers.find((s) => s.key === selectedServer).getUrl(id)
-      }
-      title={`${movie.title} - Watch (${selectedServer})`}
-      allow="autoplay; fullscreen; picture-in-picture"
-      allowFullScreen
-      className="w-full h-full border-none"
-    />
-  </div>
-</section>
+          {/* Video iframe with 16:9 aspect ratio, wider max width */}
+          <div className="aspect-w-16 aspect-h-9 rounded overflow-hidden shadow-lg max-w-screen-xl mx-auto">
+            <iframe
+              key={selectedServer} // reload iframe on server change
+              src={
+                selectedServer === "godrive"
+                  ? servers.find((s) => s.key === selectedServer).getUrl(imdbId)
+                  : servers.find((s) => s.key === selectedServer).getUrl(id)
+              }
+              title={`${movie.title} - Watch (${selectedServer})`}
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full border-none"
+            />
+          </div>
+        </section>
 
 
         {/* Like This Section */}

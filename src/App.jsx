@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import {
   fetchTrendingMovies,
   fetchUpcomingMovies,
-  fetchPopularMovies,
+  fetchPopularOnTV,
   fetchTopRatedMovies,
-} from "./api/fetchTrendingMovies";
-import Topbar from "./components/Topbar";
-import { ChevronLeft, ChevronRight, Play } from "lucide-react";
+} from "./api/TMDB";
+import Topbar from "./components/Topbar"; 
+import Footer  from "./components/Footer";
+import { ChevronLeft, ChevronRight, Play, Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./index.css";
 
@@ -21,7 +22,7 @@ function App() {
   useEffect(() => {
     fetchTrendingMovies().then(setMovies).catch(console.error);
     fetchUpcomingMovies().then(setUpcomingMovies).catch(console.error);
-    fetchPopularMovies().then(setPopularMovies).catch(console.error);
+    fetchPopularOnTV().then(setPopularMovies).catch(console.error);
     fetchTopRatedMovies().then(setTopRatedMovies).catch(console.error);
   }, []);
 
@@ -42,29 +43,40 @@ function App() {
       {/* Hero Banner */}
       {heroMovie && (
         <section
-          className="relative min-h-[60vh] md:h-[85vh] bg-cover bg-center flex flex-col md:flex-row items-center py-40 px-10 md:px-8"
+          className="relative min-h-[60vh] md:h-[90vh] bg-cover bg-center bg-no-repeat bg-black/40 bg-blend-darken flex flex-col md:flex-row items-center py-40 px-10 md:px-8"
           style={{
             backgroundImage: `url(https://image.tmdb.org/t/p/original${heroMovie.backdrop_path})`,
           }}
         >
-          <div className="absolute inset-0 bg-black/60"></div>
 
-          <div className="relative max-w-7xl z-10 text-white flex flex-col md:flex-row justify-between items-start gap-6 w-full">
+          <div className="absolute inset-0 bg-black/60"></div>
+          <div className="relative max-w-7xl z-10  text-white flex flex-col md:flex-row justify-around items-center gap-6 w-full">
             {/* Left side: movie info */}
             <div className="max-w-2xl">
               <h1 className="text-3xl sm:text-4xl font-bold mb-4">{heroMovie.title}</h1>
               <p className="max-w-xl mb-6 line-clamp-3 text-sm sm:text-base">{heroMovie.overview}</p>
 
-              <button className="flex items-center bg-black hover:bg-red-700 px-6 py-3 rounded font-semibold text-base sm:text-lg transition">
-                <Play className="mr-2" />
-                Play
-              </button>
-            </div>
 
+              <div className="flex flex-row md:flex-row gap-4 mt-4">
+                <div className="flex flex-wrap gap-4 mt-6">
+                  <button className="flex items-center gap-2 bg-white text-black hover:bg-gray-200 px-6 py-2 rounded-md font-semibold text-sm sm:text-base transition-all duration-200 shadow-md">
+                    <Play className="w-5 h-5" />
+                    Play
+                  </button>
+
+                  <button className="flex items-center gap-2 bg-white/20 text-white hover:bg-white/30 px-6 py-2 rounded-md font-semibold text-sm sm:text-base transition-all duration-200 backdrop-blur-sm border border-white/30 shadow-md">
+                    <Info className="w-5 h-5" />
+                    More Info
+                  </button>
+                </div>
+
+              </div>
+
+            </div>
             {/* Right side: search bar */}
             <form
               onSubmit={handleSearchSubmit}
-              className="flex items-center bg-black bg-opacity-50 rounded overflow-hidden w-full md:w-auto"
+              className="flex items-center  bg-black bg-opacity-50 rounded overflow-hidden w-full md:w-auto"
             >
               <input
                 type="text"
@@ -82,15 +94,21 @@ function App() {
               </button>
             </form>
           </div>
+
         </section>
       )}
 
       {/* Movie Sections */}
       <MovieSection title="Trending Now" movies={movies} navigate={navigate} />
       <MovieSection title="Upcoming Movies" movies={upcomingMovies} navigate={navigate} />
-      <MovieSection title="Popular Movies" movies={popularMovies} navigate={navigate} />
+      <MovieSection title="Popular On TV" movies={popularMovies} navigate={navigate} />
       <MovieSection title="Top Rated Movies" movies={topRatedMovies} navigate={navigate} />
+
+      <Footer/>
+      
     </div>
+
+
   );
 }
 
