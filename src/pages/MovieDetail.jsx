@@ -1,6 +1,10 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 
@@ -17,8 +21,6 @@ export default function MovieDetail() {
   const [similarMovies, setSimilarMovies] = useState([]);
   const [selectedServer, setSelectedServer] = useState("vidsrc");
 
-  const castCarouselRef = useRef(null);
-
   const servers = [
     {
       key: "vidsrc",
@@ -32,6 +34,11 @@ export default function MovieDetail() {
       requiresImdb: true,
     },
   ];
+
+  const handleBack = () => {
+    if (window.history.length > 2) navigate(-1);
+    else navigate("/");
+  };
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -52,11 +59,9 @@ export default function MovieDetail() {
           params: { api_key: apiKey },
         });
 
-        const directors = res.data.crew.filter(
-          (member) => member.job === "Director"
-        );
+        const directors = res.data.crew.filter((m) => m.job === "Director");
         setDirector(directors[0] || null);
-        setCast(res.data.cast.slice(0, 15)); // show top 15 cast for better Netflix style
+        setCast(res.data.cast.slice(0, 15));
       } catch (err) {
         console.error(err);
       }
@@ -107,22 +112,9 @@ export default function MovieDetail() {
     (s) => !s.requiresImdb || (s.requiresImdb && imdbId)
   );
 
-  // Scroll handlers for cast carousel
-  const scrollLeft = () => {
-    if (castCarouselRef.current) {
-      castCarouselRef.current.scrollBy({ left: -280, behavior: "smooth" });
-    }
-  };
-
-  const scrollRight = () => {
-    if (castCarouselRef.current) {
-      castCarouselRef.current.scrollBy({ left: 280, behavior: "smooth" });
-    }
-  };
-
   return (
     <div className="relative min-h-screen bg-black text-white">
-      {/* Background + overlay */}
+      {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center filter brightness-60"
         style={{
@@ -131,34 +123,26 @@ export default function MovieDetail() {
       />
       <div className="absolute inset-0 bg-black bg-opacity-70"></div>
 
-      {/* Content */}
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-8 flex flex-col min-h-screen">
-        {/* Top bar */}
+        {/* Header */}
         <div className="flex justify-between mb-6 items-center">
           <button
             onClick={() => navigate("/")}
-            aria-label="Back Home"
             className="bg-red-600 hover:bg-red-700 px-4 py-2 font-semibold rounded"
           >
             Back Home
           </button>
-
           <button
-            onClick={() => navigate(-1)}
-            aria-label="Close"
+            onClick={handleBack}
             className="text-white text-3xl font-bold hover:text-red-600 transition"
           >
             &times;
           </button>
         </div>
 
-        {/* Title */}
+        {/* Title + Overview */}
         <h1 className="text-5xl font-extrabold mb-4 drop-shadow-lg">{movie.title}</h1>
-
-        {/* Description */}
-        <p className="max-w-3xl mb-6 text-lg leading-relaxed drop-shadow-md">
-          {movie.overview}
-        </p>
+        <p className="max-w-3xl mb-6 text-lg leading-relaxed drop-shadow-md">{movie.overview}</p>
 
         {/* Trailer */}
         <div className="mb-12 max-w-4xl rounded overflow-hidden shadow-lg aspect-w-16 aspect-h-9 mx-auto">
@@ -197,98 +181,43 @@ export default function MovieDetail() {
           </div>
         </div>
 
-        {/* Netflix-style Cast Carousel */}
+        {/* Top Cast Carousel with Swiper */}
         <section className="mb-12">
           <h2 className="text-3xl font-bold mb-4">Top Cast</h2>
-          <div className="relative group">
-            {/* Left arrow */}
-            <button
-              aria-label="Scroll cast left"
-              onClick={scrollLeft}
-              className="absolute left-0 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-90 text-white rounded-full p-2 z-20 opacity-0 group-hover:opacity-100 transition"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            {/* Right arrow */}
-            <button
-              aria-label="Scroll cast right"
-              onClick={scrollRight}
-              className="absolute right-0 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-90 text-white rounded-full p-2 z-20 opacity-0 group-hover:opacity-100 transition"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-
-            {/* Cast container */}
-            <div
-              ref={castCarouselRef}
-              className="flex space-x-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide py-2 px-2"
-              style={{ scrollPaddingLeft: "1rem", scrollPaddingRight: "1rem" }}
-            >
-              {cast.length === 0 ? (
-                <p className="text-gray-400">No cast information.</p>
-              ) : (
-                cast.map((actor) => (
-                  <div
-                    key={actor.id}
-                    className="snap-start flex-shrink-0 w-24 sm:w-28 md:w-32 cursor-pointer transform hover:scale-105 transition-transform duration-300"
-                    title={actor.name}
-                  >
-                    <img
-                      src={
-                        actor.profile_path
-                          ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
-                          : "https://via.placeholder.com/185x278?text=No+Image"
-                      }
-                      alt={actor.name}
-                      className="rounded-lg object-cover w-full h-40 sm:h-48 md:h-56"
-                      loading="lazy"
-                    />
-                    <p className="mt-2 text-center text-sm truncate">{actor.name}</p>
-                    <p className="text-center text-xs text-gray-400 truncate">{actor.character}</p>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
+          <Swiper
+            modules={[Navigation]}
+            navigation
+            spaceBetween={20}
+            slidesPerView={2}
+            breakpoints={{
+              640: { slidesPerView: 3 },
+              768: { slidesPerView: 4 },
+              1024: { slidesPerView: 6 },
+            }}
+          >
+            {cast.map((actor) => (
+              <SwiperSlide key={actor.id}>
+                <div className="w-full cursor-pointer transform hover:scale-105 transition-transform duration-300">
+                  <img
+                    src={
+                      actor.profile_path
+                        ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+                        : "https://via.placeholder.com/185x278?text=No+Image"
+                    }
+                    alt={actor.name}
+                    className="rounded-lg object-cover w-full h-48"
+                  />
+                  <p className="mt-2 text-center text-sm truncate">{actor.name}</p>
+                  <p className="text-center text-xs text-gray-400 truncate">
+                    {actor.character}
+                  </p>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </section>
-        {/* Footer Info */}
-        <div className="mt-auto pt-10 border-t border-gray-700 max-w-3xl mb-10">
-          <div className="flex flex-wrap gap-8 text-gray-300 text-sm">
-            <div>
-              <span className="font-semibold text-white">Rating:</span>{" "}
-              {movie.vote_average.toFixed(1)} / 10
-            </div>
-            <div>
-              <span className="font-semibold text-white">Votes:</span>{" "}
-              {movie.vote_count.toLocaleString()}
-            </div>
-            <div>
-              <span className="font-semibold text-white">Status:</span> {movie.status}
-            </div>
-            <div>
-              <span className="font-semibold text-white">Original Language:</span>{" "}
-              {movie.original_language.toUpperCase()}
-            </div>
-          </div>
-        </div>
-        {/* Watch Movie Section */}
+
+        {/* Watch Movie */}
         <section className="mb-10 px-4">
           <h2 className="text-2xl font-semibold mb-4 max-w-screen-xl mx-auto">Watch Movie</h2>
 
@@ -324,33 +253,42 @@ export default function MovieDetail() {
           </div>
         </section>
 
-        {/* More Like This */}
+        {/* Similar Movies Carousel with Swiper */}
         <div>
           <h2 className="text-3xl font-bold mb-6">More Like This</h2>
           {similarMovies.length === 0 ? (
             <p className="text-gray-400">No similar movies found.</p>
           ) : (
-            <div className="flex overflow-x-auto space-x-4 scrollbar-hide pb-2">
+            <Swiper
+              modules={[Navigation]}
+              navigation
+              spaceBetween={20}
+              slidesPerView={2}
+              breakpoints={{
+                640: { slidesPerView: 3 },
+                768: { slidesPerView: 4 },
+                1024: { slidesPerView: 6 },
+              }}
+            >
               {similarMovies.map((sim) => (
-                <div
-                  key={sim.id}
-                  onClick={() => navigate(`/movie/${sim.id}`)}
-                  className="flex-shrink-0 w-36 cursor-pointer rounded-md overflow-hidden shadow-lg hover:scale-105 transition-transform"
-                  title={sim.title}
-                >
-                  <img
-                    src={`https://image.tmdb.org/t/p/w300${sim.poster_path}`}
-                    alt={sim.title}
-                    className="w-full h-52 object-cover"
-                  />
-                  <div className="text-sm mt-1 truncate px-1">{sim.title}</div>
-                </div>
+                <SwiperSlide key={sim.id}>
+                  <div
+                    onClick={() => navigate(`/movie/${sim.id}`)}
+                    className="cursor-pointer rounded-md overflow-hidden shadow-lg hover:scale-105 transition-transform"
+                    title={sim.title}
+                  >
+                    <img
+                      src={`https://image.tmdb.org/t/p/w300${sim.poster_path}`}
+                      alt={sim.title}
+                      className="w-full h-52 object-cover"
+                    />
+                    <div className="text-sm mt-1 truncate px-1">{sim.title}</div>
+                  </div>
+                </SwiperSlide>
               ))}
-            </div>
+            </Swiper>
           )}
         </div>
-
-
       </div>
     </div>
   );

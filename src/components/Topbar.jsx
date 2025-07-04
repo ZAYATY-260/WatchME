@@ -29,18 +29,13 @@ const Topbar = () => {
         <nav className="hidden md:flex space-x-6 text-sm font-medium items-center">
           <Link to="/" className="hover:text-gray-300 transition">Home</Link>
           <Link to="/movies" className="hover:text-gray-300 transition">Movies</Link>
-          <Link to="/tv-shows" className="hover:text-gray-300 transition">TV Shows</Link>
+          <Link to="/Tv Shows" className="hover:text-gray-300 transition">TV Shows</Link>
           <Link to="/mylist" className="hover:text-gray-300 transition">My List</Link>
         </nav>
       </div>
 
       <div className="flex items-center space-x-4">
-        {/* Profile Image - show only on desktop */}
-        <img
-          src="https://media.licdn.com/dms/image/v2/D4D35AQEJ-pIca5IaQw/profile-framedphoto-shrink_400_400/B4DZfLFZsMH4Ac-/0/1751458880757?e=1752102000&v=beta&t=jCBNqRysQcB0sEaLH3GoZwk6HqLImVYYS2qF9XDanfQ"
-          alt="Profile"
-          className="hidden md:block w-8 h-8 rounded-full object-cover border border-gray-500"
-        />
+
 
         {/* Hamburger Icon - show only on mobile */}
         <button
